@@ -2,6 +2,8 @@
 Endpoints de usuários — /api/v1/users
 """
 
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
@@ -92,7 +94,7 @@ def list_users(
     },
 )
 def get_user(
-    user_id: int,
+    user_id: UUID,
     service: UserService = Depends(_get_user_service),
     _current_user: str = Depends(get_current_user_email),
 ) -> UserResponse:
@@ -115,7 +117,7 @@ def get_user(
     },
 )
 def update_user(
-    user_id: int,
+    user_id: UUID,
     payload: UserUpdate,
     service: UserService = Depends(_get_user_service),
     _current_user: str = Depends(get_current_user_email),

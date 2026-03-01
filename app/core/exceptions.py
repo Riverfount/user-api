@@ -6,6 +6,9 @@ para respostas adequadas via exception handlers registrados em main.py.
 """
 
 
+from uuid import UUID
+
+
 class AppError(Exception):
     """Classe base para todas as exceções de domínio."""
 
@@ -17,13 +20,13 @@ class EmailAlreadyExistsError(AppError):
 
 
 class RoleNotFoundError(AppError):
-    def __init__(self, role_id: int) -> None:
+    def __init__(self, role_id: UUID) -> None:
         self.role_id = role_id
         super().__init__(f"Role com id={role_id} não encontrado.")
 
 
 class UserNotFoundError(AppError):
-    def __init__(self, user_id: int) -> None:
+    def __init__(self, user_id: UUID) -> None:
         self.user_id = user_id
         super().__init__(f"Usuário com id={user_id} não encontrado.")
 

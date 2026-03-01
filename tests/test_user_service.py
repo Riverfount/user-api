@@ -3,6 +3,7 @@ Testes unitários do UserService.
 """
 
 import pytest
+from uuid import uuid4
 
 from app.core.exceptions import (
     EmailAlreadyExistsError,
@@ -61,15 +62,16 @@ class TestCreateUser:
         assert "carlos@example.com" in str(exc_info.value)
 
     def test_role_inexistente_levanta_role_not_found(self, user_service: UserService):
+        nonexistent_role_id = uuid4()
         payload = UserCreate(
             name="Maria Nunes",
             email="maria@example.com",
-            role_id=9999,
+            role_id=nonexistent_role_id,
         )
         with pytest.raises(RoleNotFoundError) as exc_info:
             user_service.create_user(payload)
 
-        assert exc_info.value.role_id == 9999
+        assert exc_info.value.role_id == nonexistent_role_id
 
     def test_senha_armazenada_como_hash(self, user_service: UserService, seed_role):
         from app.core.security import verify_password
@@ -123,10 +125,11 @@ class TestGetUserById:
         assert found.role is not None
 
     def test_usuario_inexistente_levanta_user_not_found(self, user_service: UserService):
+        nonexistent_id = uuid4()
         with pytest.raises(UserNotFoundError) as exc_info:
-            user_service.get_user_by_id(99999)
+            user_service.get_user_by_id(nonexistent_id)
 
-        assert exc_info.value.user_id == 99999
+        assert exc_info.value.user_id == nonexistent_id
 
 
 class TestUpdateUser:
@@ -154,11 +157,11 @@ class TestUpdateUser:
         ).user
 
         with pytest.raises(RoleNotFoundError):
-            user_service.update_user(created.id, UserUpdate(role_id=9999))
+            user_service.update_user(created.id, UserUpdate(role_id=uuid4()))
 
     def test_usuario_inexistente_levanta_user_not_found(self, user_service: UserService):
         with pytest.raises(UserNotFoundError):
-            user_service.update_user(99999, UserUpdate(name="Novo Nome"))
+            user_service.update_user(uuid4(), UserUpdate(name="Novo Nome"))
 
 
 class TestAuthenticateUser:

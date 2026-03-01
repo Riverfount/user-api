@@ -11,6 +11,7 @@ Levanta exceções de domínio (app.core.exceptions) — nunca HTTPException.
 """
 
 from dataclasses import dataclass
+from uuid import UUID
 
 from app.core.exceptions import (
     EmailAlreadyExistsError,
@@ -90,7 +91,7 @@ class UserService:
     # ------------------------------------------------------------------
     # Buscar usuário por ID
     # ------------------------------------------------------------------
-    def get_user_by_id(self, user_id: int) -> User:
+    def get_user_by_id(self, user_id: UUID) -> User:
         user = self._users.get_by_id_with_role(user_id)
         if user is None:
             raise UserNotFoundError(user_id)
@@ -105,7 +106,7 @@ class UserService:
     # ------------------------------------------------------------------
     # Atualizar usuário
     # ------------------------------------------------------------------
-    def update_user(self, user_id: int, payload: UserUpdate) -> User:
+    def update_user(self, user_id: UUID, payload: UserUpdate) -> User:
         """
         Atualiza parcialmente um usuário.
         Apenas os campos presentes (não None) são modificados.

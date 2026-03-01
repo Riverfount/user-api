@@ -9,6 +9,7 @@ Separamos claramente:
 """
 
 from datetime import datetime
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
@@ -35,10 +36,9 @@ class UserCreate(BaseModel):
         examples=["maria.silva@example.com"],
         description="E-mail único do usuário.",
     )
-    role_id: int = Field(
+    role_id: UUID = Field(
         ...,
-        gt=0,
-        examples=[1],
+        examples=["a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"],
         description="ID do papel (role) do usuário.",
     )
     password: str | None = Field(
@@ -67,9 +67,8 @@ class UserUpdate(BaseModel):
         max_length=150,
         description="Novo nome do usuário.",
     )
-    role_id: int | None = Field(
+    role_id: UUID | None = Field(
         default=None,
-        gt=0,
         description="Novo ID do papel (role) do usuário.",
     )
     is_active: bool | None = Field(
@@ -83,10 +82,10 @@ class UserResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: UUID
     name: str
     email: EmailStr
-    role_id: int
+    role_id: UUID
     role: RoleResponse | None = None
     is_active: bool
     created_at: datetime

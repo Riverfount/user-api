@@ -2,6 +2,8 @@
 Schemas Pydantic para Role.
 """
 
+from uuid import UUID
+
 from pydantic import BaseModel, ConfigDict
 
 
@@ -12,4 +14,4 @@ class RoleBase(BaseModel):
 class RoleResponse(RoleBase):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
+    id: UUID

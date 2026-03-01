@@ -2,7 +2,7 @@
 Testes de integração dos endpoints de usuários e autenticação.
 """
 
-import pytest
+from uuid import uuid4
 from fastapi.testclient import TestClient
 
 
@@ -14,7 +14,7 @@ class TestPostUsers:
             json={
                 "name": "Bruno Ferreira",
                 "email": "bruno@test.com",
-                "role_id": seed_role.id,
+                "role_id": str(seed_role.id),
                 "password": "Senh@Forte1",
             },
         )
@@ -33,7 +33,7 @@ class TestPostUsers:
             json={
                 "name": "Camila Torres",
                 "email": "camila@test.com",
-                "role_id": seed_role.id,
+                "role_id": str(seed_role.id),
             },
         )
         assert response.status_code == 201
@@ -45,7 +45,7 @@ class TestPostUsers:
         payload = {
             "name": "Diego Lopes",
             "email": "diego@test.com",
-            "role_id": seed_role.id,
+            "role_id": str(seed_role.id),
         }
         client.post("/api/v1/users/", json=payload)
         response = client.post("/api/v1/users/", json=payload)
@@ -61,7 +61,7 @@ class TestPostUsers:
             json={
                 "name": "Email Inválido",
                 "email": "nao-e-um-email",
-                "role_id": seed_role.id,
+                "role_id": str(seed_role.id),
             },
         )
         assert response.status_code == 422
@@ -72,7 +72,7 @@ class TestPostUsers:
             json={
                 "name": "Fulano",
                 "email": "fulano@test.com",
-                "role_id": 99999,
+                "role_id": str(uuid4()),
             },
         )
         assert response.status_code == 422
@@ -83,7 +83,7 @@ class TestPostUsers:
             json={
                 "name": "Maiusculo",
                 "email": "MAIUSCULO@TEST.COM",
-                "role_id": seed_role.id,
+                "role_id": str(seed_role.id),
             },
         )
         assert response.status_code == 201
@@ -98,7 +98,7 @@ class TestGetUser:
             json={
                 "name": "Get Teste",
                 "email": "getteste@test.com",
-                "role_id": seed_role.id,
+                "role_id": str(seed_role.id),
             },
         )
         user_id = create_resp.json()["id"]
@@ -116,13 +116,13 @@ class TestGetUser:
 
     def test_usuario_inexistente_retorna_404(self, client: TestClient, auth_token: str):
         response = client.get(
-            "/api/v1/users/99999",
+            f"/api/v1/users/{uuid4()}",
             headers={"Authorization": f"Bearer {auth_token}"},
         )
         assert response.status_code == 404
 
     def test_sem_token_retorna_401(self, client: TestClient):
-        response = client.get("/api/v1/users/1")
+        response = client.get(f"/api/v1/users/{uuid4()}")
         assert response.status_code == 401
 
 
@@ -134,7 +134,7 @@ class TestListUsers:
             json={
                 "name": "Lista User",
                 "email": "lista@test.com",
-                "role_id": seed_role.id,
+                "role_id": str(seed_role.id),
             },
         )
         response = client.get(
@@ -165,7 +165,7 @@ class TestUpdateUser:
             json={
                 "name": "Nome Original",
                 "email": "atualizar@test.com",
-                "role_id": seed_role.id,
+                "role_id": str(seed_role.id),
             },
         )
         user_id = create_resp.json()["id"]
@@ -184,7 +184,7 @@ class TestUpdateUser:
             json={
                 "name": "Para Desativar",
                 "email": "desativar@test.com",
-                "role_id": seed_role.id,
+                "role_id": str(seed_role.id),
             },
         )
         user_id = create_resp.json()["id"]
@@ -199,14 +199,14 @@ class TestUpdateUser:
 
     def test_usuario_inexistente_retorna_404(self, client: TestClient, auth_token: str):
         response = client.patch(
-            "/api/v1/users/99999",
+            f"/api/v1/users/{uuid4()}",
             json={"name": "Nao existe"},
             headers={"Authorization": f"Bearer {auth_token}"},
         )
         assert response.status_code == 404
 
     def test_sem_token_retorna_401(self, client: TestClient):
-        response = client.patch("/api/v1/users/1", json={"name": "x"})
+        response = client.patch(f"/api/v1/users/{uuid4()}", json={"name": "x"})
         assert response.status_code == 401
 
 

@@ -4,6 +4,7 @@ Todos os repositórios concretos herdam desta classe.
 """
 
 from typing import Generic, TypeVar, Type
+from uuid import UUID
 
 from sqlalchemy.orm import Session
 
@@ -19,7 +20,7 @@ class BaseRepository(Generic[ModelType]):
         self.model = model
         self.session = session
 
-    def get_by_id(self, entity_id: int) -> ModelType | None:
+    def get_by_id(self, entity_id: UUID) -> ModelType | None:
         return self.session.get(self.model, entity_id)
 
     def get_all(self, skip: int = 0, limit: int = 100) -> list[ModelType]:

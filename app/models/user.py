@@ -4,15 +4,16 @@ Inclui a tabela associativa `user_claims` (many-to-many com claims).
 """
 
 from datetime import datetime
+from uuid import UUID, uuid4
 
 from sqlalchemy import (
     Boolean,
     DateTime,
     ForeignKey,
-    Integer,
     String,
     Table,
     Column,
+    Uuid,
     func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -28,13 +29,13 @@ user_claims_table = Table(
     Base.metadata,
     Column(
         "user_id",
-        Integer,
+        Uuid,
         ForeignKey("users.id", ondelete="CASCADE"),
         primary_key=True,
     ),
     Column(
         "claim_id",
-        Integer,
+        Uuid,
         ForeignKey("claims.id", ondelete="CASCADE"),
         primary_key=True,
     ),
@@ -47,13 +48,13 @@ user_claims_table = Table(
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     name: Mapped[str] = mapped_column(String(150), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
 
-    role_id: Mapped[int] = mapped_column(
-        Integer,
+    role_id: Mapped[UUID] = mapped_column(
+        Uuid,
         ForeignKey("roles.id", ondelete="RESTRICT"),
         nullable=False,
     )

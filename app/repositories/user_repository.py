@@ -3,6 +3,8 @@ Repositório para a entidade User.
 Encapsula todas as queries relacionadas a usuários.
 """
 
+from uuid import UUID
+
 from sqlalchemy import exists, select
 from sqlalchemy.orm import Session, joinedload
 
@@ -23,7 +25,7 @@ class UserRepository(BaseRepository[User]):
             .first()
         )
 
-    def get_by_id_with_role(self, user_id: int) -> User | None:
+    def get_by_id_with_role(self, user_id: UUID) -> User | None:
         """Busca um usuário pelo ID, carregando o relacionamento Role com eager loading."""
         return (
             self.session.query(User)
