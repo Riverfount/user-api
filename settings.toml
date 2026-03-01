@@ -1,0 +1,73 @@
+[default]
+app_name = "User API"
+app_version = "0.1.0"
+app_debug = false
+app_host = "0.0.0.0"
+app_port = 8000
+
+[default.database]
+db_driver = "postgresql+psycopg2"
+db_host = "localhost"
+db_port = 5432
+db_name = "user_api_db"
+db_user = "postgres"
+db_password = "postgres"
+db_pool_size = 5
+db_max_overflow = 10
+db_echo = false
+
+[default.security]
+password_min_length = 8
+password_auto_length = 12
+# Sobrescreva SECRET_KEY via .secrets.toml ou USERAPI_SECURITY__SECRET_KEY em produção
+secret_key = "dev-secret-key-TROQUE-EM-PRODUCAO"
+access_token_expire_minutes = 30
+
+[default.cors]
+# Sobrescreva com as origens reais em produção
+allow_origins = ["http://localhost:3000", "http://localhost:8080"]
+allow_credentials = true
+allow_methods = ["*"]
+allow_headers = ["*"]
+
+# -------------------------------------------------------------------
+# Ambiente de desenvolvimento
+# -------------------------------------------------------------------
+[development]
+app_debug = true
+
+[development.database]
+db_echo = true
+
+# -------------------------------------------------------------------
+# Ambiente de testes
+# -------------------------------------------------------------------
+[testing]
+app_debug = true
+
+[testing.database]
+db_driver = "sqlite"
+db_host = ""
+db_port = 0
+db_name = "file:testdb?mode=memory&cache=shared&uri=true"
+db_user = ""
+db_password = ""
+db_echo = false
+
+# -------------------------------------------------------------------
+# Ambiente de produção
+# -------------------------------------------------------------------
+[production]
+app_debug = false
+
+[production.database]
+db_pool_size = 20
+db_max_overflow = 40
+db_echo = false
+
+[production.cors]
+# Em produção, liste explicitamente as origens permitidas
+allow_origins = ["https://app.example.com"]
+allow_credentials = true
+allow_methods = ["GET", "POST", "PATCH", "DELETE"]
+allow_headers = ["Authorization", "Content-Type"]
